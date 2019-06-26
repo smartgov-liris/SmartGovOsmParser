@@ -8,9 +8,9 @@ import com.smartgov.osmparser.filters.elements.ElementFilter;
 
 public class RoadNodesFilter extends ElementFilter {
 
-	private List<Street> ways;
+	private List<Way> ways;
 	
-	public RoadNodesFilter(List<Street> list) {
+	public RoadNodesFilter(List<Way> list) {
 		this.ways = list;
 	}
 

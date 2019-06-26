@@ -4,6 +4,10 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import com.smartgov.osmparser.elements.WayNd;
 
+/**
+ * A JAXB adapter to serialize {@literal <nd>} only as the ref attributes, in
+ * order to represent the ref nodes of a way as an array of ids.
+ */
 public class WayNdAdapter extends XmlAdapter<WayNd, String>{
 
 	@Override
@@ -13,7 +17,6 @@ public class WayNdAdapter extends XmlAdapter<WayNd, String>{
 
 	@Override
 	public String unmarshal(WayNd arg0) throws Exception {
-		// TODO Auto-generated method stub
 		return arg0.getRef();
 	}
 

@@ -10,6 +10,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.smartgov.osmparser.elements.Tag;
 
+/**
+ * Jackson serializer used to serialize osm tags as "key: value" entries,
+ * instead of default "{"key": "...", "value": "..."}" objects.
+ */
 public class TagSerializer extends StdSerializer<List<Tag>>{
 
 	private static final long serialVersionUID = 1L;

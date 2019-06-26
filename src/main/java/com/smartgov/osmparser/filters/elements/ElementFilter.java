@@ -1,7 +1,7 @@
 package com.smartgov.osmparser.filters.elements;
 
 import com.smartgov.osmparser.elements.OsmElement;
-import com.smartgov.osmparser.filters.tags.IncludeTagMatcher;
+import com.smartgov.osmparser.filters.tags.TagMatcher;
 
 public abstract class ElementFilter {
 
@@ -11,15 +11,11 @@ public abstract class ElementFilter {
 		return new OrFilter(this, nodeFilter);
 	}
 	
-	public static boolean hasTag(OsmElement element, IncludeTagMatcher matcher) {
-		boolean hasTag = false;
-		int i = 0;
-		while (i < element.getTags().size() && !hasTag) {
-			if(matcher.matches(element.getTags().get(i))){
-				hasTag = true;
-			}
-			i++;
-		}
-		return hasTag;
+	public ElementFilter and(ElementFilter nodeFilter) {
+		return new AndFilter(this, nodeFilter);
+	}
+	
+	public static ElementFilter not(ElementFilter nodeFilter) {
+		return new NotFilter(nodeFilter);
 	}
 }

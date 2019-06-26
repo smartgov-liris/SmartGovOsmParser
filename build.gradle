@@ -30,3 +30,5 @@ dependencies {
 
 // Define the main class for the application
 mainClassName = 'com.smartgov.osmparser.App'
+
+javadoc.destinationDir = file("docs")

@@ -9,28 +9,53 @@ import com.smartgov.osmparser.elements.Node;
 import com.smartgov.osmparser.elements.Relation;
 import com.smartgov.osmparser.elements.Way;
 
-// @XmlRootElement(name = "osm")
-public class Osm<Tnode extends Node, Tway extends Way, Trelation extends Relation> {
+/**
+ * Base class to un-marshal osm root elements (nodes, ways and relations).
+ * 
+ * <p>
+ * For more information, check the <a href="https://wiki.openstreetmap.org/wiki/OSM_XML"> official OSM wiki</a>
+ * </p>
+ * 
+ * @author pbreugnot
+ *
+ */
+@XmlRootElement(name = "osm")
+public class Osm {
 
 	@XmlElement(name = "node")
-	private List<Tnode> nodes;
+	private List<Node> nodes;
 
 	@XmlElement(name = "way")
-	private List<Tway> ways;
+	private List<Way> ways;
 	
 	@XmlElement(name = "relation")
-	private List<Trelation> relations;
+	private List<Relation> relations;
 	
 	
-	public List<Tnode> getNodes() {
+	/**
+	 * Un-marshalled and eventually filtered osm nodes
+	 *
+	 * @return  Osm nodes
+	 */
+	public List<Node> getNodes() {
 		return nodes;
 	}
 
-	public List<Tway> getWays() {
+	/**
+	 * Un-marshalled and eventually filtered osm ways
+	 *
+	 * @return Osm ways
+	 */
+	public List<Way> getWays() {
 		return ways;
 	}
 
-	public List<Trelation> getRelations() {
+	/**
+	 * Un-marshalled and eventually filtered osm relations
+	 *
+	 * @return Osm relations. 
+	 */
+	public List<Relation> getRelations() {
 		return relations;
 	}
 	

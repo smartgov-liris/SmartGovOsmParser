@@ -17,144 +17,263 @@ import com.smartgov.osmparser.elements.Node;
 import com.smartgov.osmparser.elements.Relation;
 import com.smartgov.osmparser.elements.Tag;
 import com.smartgov.osmparser.elements.Way;
-import com.smartgov.osmparser.examples.roads.OsmStreet;
 import com.smartgov.osmparser.filters.elements.ElementFilter;
 import com.smartgov.osmparser.filters.tags.TagMatcher;
 
+/**
+ * Main class used to load osm features from the osm file input and to filter
+ * elements.
+ *
+ */
 public class OsmParser {
 
-	private OsmStreet osm;
+	private Osm osm;
 
-	private List<ElementFilter> nodeFilters;
-	private List<TagMatcher> nodeTagMatchers;
+	private ElementFilter nodeFilter;
+	private TagMatcher nodeTagMatcher;
 	
-	private List<ElementFilter> wayFilters;
-	private List<TagMatcher> wayTagMatchers;
+	private ElementFilter wayFilter;
+	private TagMatcher wayTagMatcher;
 	
-	private List<ElementFilter> relationFilters;
-	private List<TagMatcher> relationTagMatchers;
+	private ElementFilter relationFilter;
+	private TagMatcher relationTagMatcher;
 	
-	public OsmParser() {
-		this.nodeFilters = new ArrayList<>();
-		this.nodeTagMatchers = new ArrayList<>();
-		
-		this.wayFilters = new ArrayList<>();
-		this.wayTagMatchers = new ArrayList<>();
-		
-		this.relationFilters = new ArrayList<>();
-		this.relationTagMatchers = new ArrayList<>();
-	}
 	
-	public OsmStreet parse(File osmFile, Class<? extends Osm<?, ?, ?>> osmClass) throws JAXBException, FileNotFoundException {
-		JAXBContext context = JAXBContext.newInstance(OsmStreet.class);
-		System.out.println(context.createUnmarshaller().unmarshal(new FileReader(osmFile)).getClass().getSimpleName());
-        osm = (OsmStreet) context.createUnmarshaller().unmarshal(new FileReader(osmFile));
+	/**
+	 * Parses the input file and returned the un-filtered osm feature (i.e.
+	 * all the features contained in the file).
+	 *
+	 * @param osmFile an OSM file (<a
+	 * href="https://wiki.openstreetmap.org/wiki/OSM_XML">official wiki
+	 * page</a>)
+	 * @return un-marshalled osm instance
+	 */
+	public Osm parse(File osmFile) throws JAXBException, FileNotFoundException {
+		JAXBContext context = JAXBContext.newInstance(Osm.class);
+        osm = (Osm) context.createUnmarshaller().unmarshal(new FileReader(osmFile));
         return osm;
 	}
 	
-	public void addNodeFilter(ElementFilter nodeFilter) {
-		this.nodeFilters.add(nodeFilter);
+	/**
+	 * Set up a node tag matcher.
+	 *
+	 * <p>
+	 * When {@link #filterNodes} is called, only the node tags that match
+	 * the specified tag matcher will be kept.
+	 * </p>
+	 *
+	 * <p>
+	 * Should not be confused with {@link #setNodeFilter}.
+	 * </p>
+	 *
+	 * @param nodeTagMatcher node tags to keep
+	 */
+	public void setNodeTagMatcher(TagMatcher nodeTagMatcher) {
+		this.nodeTagMatcher = nodeTagMatcher;
+	}
+
+	/**
+	 * Set up a way tag matcher.
+	 *
+	 * <p>
+	 * When {@link #filterWays} is called, only the way tags that match
+	 * the specified tag matcher will be kept.
+	 * </p>
+	 *
+	 * <p>
+	 * Should not be confused with {@link #setWayFilter}.
+	 * </p>
+	 *
+	 * @param wayTagMatcher way tags to keep
+	 */
+	public void setWayTagMatcher(TagMatcher wayTagMatcher) {
+		this.wayTagMatcher = wayTagMatcher;
 	}
 	
-	public void addNodeTagMatcher(TagMatcher tagMatcher) {
-		this.nodeTagMatchers.add(tagMatcher);
+	/**
+	 * Set up a relation tag matcher.
+	 *
+	 * <p>
+	 * When {@link #filterWays} is called, only the relation tags that match
+	 * the specified tag matcher will be kept.
+	 * </p>
+	 *
+	 * <p>
+	 * Should not be confused with {@link #setRelationFilter}.
+	 * </p>
+	 *
+	 * @param relationTagMatcher relation tags to keep
+	 */
+	public void setRelationTagMatcher(TagMatcher relationTagMatcher) {
+		this.relationTagMatcher = relationTagMatcher;
 	}
 	
-	public void addWayFilter(ElementFilter wayFilter) {
-		this.wayFilters.add(wayFilter);
+	/**
+	 * Set up a node filter.
+	 *
+	 * <p>
+	 * Only the nodes that match the specified filter will be kept.
+	 * </p>
+	 *
+	 * @param nodeFilter nodes to keep
+	 */
+	public void setNodeFilter(ElementFilter nodeFilter) {
+		this.nodeFilter = nodeFilter;
 	}
-	
-	public void addWayTagMatcher(TagMatcher tagMatcher) {
-		this.wayTagMatchers.add(tagMatcher);
+
+	/**
+	 * Set up a way filter.
+	 *
+	 * <p>
+	 * Only the ways that match the specified filter will be kept.
+	 * </p>
+	 *
+	 * @param wayFilter ways to keep
+	 */
+	public void setWayFilter(ElementFilter wayFilter) {
+		this.wayFilter = wayFilter;
 	}
-	
-	public void addRelationFilter(ElementFilter relationFilter) {
-		this.relationFilters.add(relationFilter);
+
+	/**
+	 * Set up a relation filter.
+	 *
+	 * <p>
+	 * Only the relations that match the specified filter will be kept.
+	 * </p>
+	 *
+	 * @param relationFilter relations to keep
+	 */
+	public void setRelationFilter(ElementFilter relationFilter) {
+		this.relationFilter = relationFilter;
 	}
-	
-	public void addRelationTagMatcher(TagMatcher tagMatcher) {
-		this.relationTagMatchers.add(tagMatcher);
-	}
-	
+
+	/**
+	 * Filter the osm nodes thanks to the {@link #setNodeFilter node
+	 * filter}, removing un-matching nodes from the osm
+	 * instance.
+	 *
+	 * <p>
+	 * If the node filter is <code>null</code>, all the instances will be
+	 * kept.
+	 * </p>
+	 */
 	public void filterNodes() {
-		for (ElementFilter filter : nodeFilters) {
+		if(nodeFilter != null) {
 			List<Node> nodesToRemove = new ArrayList<>();
 			for (Node node : osm.getNodes()) {
-				if (!filter.filter(node)) {
+				if (!nodeFilter.filter(node)) {
 					nodesToRemove.add(node);
 				}
 				else {
-					List<Tag> tagsToRemove = new ArrayList<>();
-					for (TagMatcher tagMatcher : nodeTagMatchers) {
+					if (nodeTagMatcher != null) {
+						List<Tag> tagsToRemove = new ArrayList<>();
 						for(Tag tag : node.getTags()) {
-							if (!tagMatcher.matches(tag)) {
+							if (!nodeTagMatcher.matches(tag)) {
 								tagsToRemove.add(tag);
 							}
 						}
+						node.getTags().removeAll(tagsToRemove);
 					}
-					node.getTags().removeAll(tagsToRemove);
 				}
 			}
 			osm.getNodes().removeAll(nodesToRemove);
 		}
 	}
-	
+
+	/**
+	 * Filter the osm ways thanks to the {@link #setWayFilter way
+	 * filter}, removing un-matching ways from the osm
+	 * instance.
+	 *
+	 * <p>
+	 * If the way filter is <code>null</code>, all the instances will be
+	 * kept.
+	 * </p>
+	 */
 	public void filterWays() {
-		for (ElementFilter filter : wayFilters) {
+		if(wayFilter != null) {
 			List<Way> waysToRemove = new ArrayList<>();
 			for (Way way : osm.getWays()) {
-				if (!filter.filter(way)) {
+				if (!wayFilter.filter(way)) {
 					waysToRemove.add(way);
 				}
 				else {
-					List<Tag> tagsToRemove = new ArrayList<>();
-					for (TagMatcher tagMatcher : wayTagMatchers) {
+					if (wayTagMatcher != null) {
+						List<Tag> tagsToRemove = new ArrayList<>();
 						for(Tag tag : way.getTags()) {
-							if (!tagMatcher.matches(tag)) {
+							if (!wayTagMatcher.matches(tag)) {
 								tagsToRemove.add(tag);
 							}
 						}
+						way.getTags().removeAll(tagsToRemove);
 					}
-					way.getTags().removeAll(tagsToRemove);
 				}
 			}
 			osm.getWays().removeAll(waysToRemove);
 		}
 	}
-	
+
+	/**
+	 * Filter the osm relations thanks to the {@link #setRelationFilter
+	 * relation filter}, removing un-matching relations from the osm
+	 * instance.
+	 *
+	 * <p>
+	 * If the relation filter is <code>null</code>, all the instances will be
+	 * kept.
+	 * </p>
+	 */
 	public void filterRelations() {
-		for (ElementFilter filter : relationFilters) {
+		if(relationFilter != null) {
 			List<Relation> relationsToRemove = new ArrayList<>();
 			for (Relation relation : osm.getRelations()) {
-				if (!filter.filter(relation)) {
+				if (!relationFilter.filter(relation)) {
 					relationsToRemove.add(relation);
 				}
 				else {
-					List<Tag> tagsToRemove = new ArrayList<>();
-					for (TagMatcher tagMatcher : relationTagMatchers) {
+					if (relationTagMatcher != null) {
+						List<Tag> tagsToRemove = new ArrayList<>();
 						for(Tag tag : relation.getTags()) {
-							if (!tagMatcher.matches(tag)) {
+							if (!relationTagMatcher.matches(tag)) {
 								tagsToRemove.add(tag);
 							}
 						}
+						relation.getTags().removeAll(tagsToRemove);
 					}
-					relation.getTags().removeAll(tagsToRemove);
 				}
 			}
 			osm.getRelations().removeAll(relationsToRemove);
 		}
 	}
 	
+	/**
+	 * Write a JSON representation of the current osm nodes to the
+	 * specified file.
+	 *
+	 * @param nodeFile node json file
+	 */
 	public void writeNodes(File nodeFile) throws JsonGenerationException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(nodeFile, osm.getNodes());
 	}
 	
+	/**
+	 * Write a JSON representation of the current osm ways to the
+	 * specified file.
+	 *
+	 * @param wayFile way json file
+	 */
 	public void writeWays(File wayFile) throws JsonGenerationException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(wayFile, osm.getWays());
 	}
 	
+	/**
+	 * Write a JSON representation of the current osm relations to the
+	 * specified file.
+	 *
+	 * @param relationFile relation json file
+	 */
 	public void writeRelations(File relationFile) throws JsonGenerationException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(relationFile, osm.getRelations());

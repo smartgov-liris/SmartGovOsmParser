@@ -1,0 +1,8 @@
+com.smartgov.osmparser
+com.smartgov.osmparser.adapters
+com.smartgov.osmparser.elements
+com.smartgov.osmparser.examples.roads
+com.smartgov.osmparser.examples.shops
+com.smartgov.osmparser.filters.elements
+com.smartgov.osmparser.filters.tags
+com.smartgov.osmparser.serializers

@@ -12,21 +12,25 @@ import com.smartgov.osmparser.Osm;
 import com.smartgov.osmparser.OsmParser;
 import com.smartgov.osmparser.elements.Node;
 import com.smartgov.osmparser.elements.Relation;
-import com.smartgov.osmparser.filters.tags.IncludeTagMatcher;
+import com.smartgov.osmparser.filters.elements.TagFilter;
+import com.smartgov.osmparser.filters.tags.BaseTagMatcher;
 
 public class Main {
 
     public static void main(String[] args) throws JAXBException, IOException {
         OsmParser parser = new OsmParser();
-        OsmStreet osm = (OsmStreet) parser.parse(new File(Main.class.getResource("../test.osm").getFile()), OsmStreet.class);
+        Osm osm = (Osm) parser.parse(new File(Main.class.getResource("../test.osm").getFile()));
         
 
-        parser.addWayFilter(new RoadWaysFilter());
-        parser.addWayTagMatcher(new IncludeTagMatcher("highway", ".*"));
+        parser.setWayFilter(new TagFilter(new BaseTagMatcher("highway", ".*")));
+        parser.setWayTagMatcher(new BaseTagMatcher("highway", ".*").or("name", ".*"));
+
+//        parser.addWayTagMatcher(new IncludeTagMatcher("ref", ".*"));
         parser.filterWays();
+        System.out.println(osm.getWays());
         
         // osm.addNodeFilter((new RoadNodesFilter(osm.getWays())).or(new ShopFilter()));
-        parser.addNodeFilter(new RoadNodesFilter(osm.getWays()));
+        parser.setNodeFilter(new RoadNodesFilter(osm.getWays()));
         parser.filterNodes();
         
         
