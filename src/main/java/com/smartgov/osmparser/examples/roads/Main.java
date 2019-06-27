@@ -8,6 +8,8 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.smartgov.osmparser.Osm;
 import com.smartgov.osmparser.OsmParser;
 import com.smartgov.osmparser.filters.elements.TagFilter;
@@ -40,9 +42,11 @@ public class Main {
         // Filter nodes
         parser.filterNodes();
         
+        // Custom object mapper to indent output
+        ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         
-        parser.writeNodes(new File("src/main/resources/com/smartgov/osmparser/examples/roads/nodes.json"));
-        parser.writeWays(new File("src/main/resources/com/smartgov/osmparser/examples/roads/ways.json"));
+        parser.writeNodes(new File("src/main/resources/com/smartgov/osmparser/examples/roads/nodes.json"), mapper);
+        parser.writeWays(new File("src/main/resources/com/smartgov/osmparser/examples/roads/ways.json"), mapper);
 
     }
 }

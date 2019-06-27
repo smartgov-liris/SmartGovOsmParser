@@ -248,7 +248,7 @@ public class OsmParser {
 	
 	/**
 	 * Write a JSON representation of the current osm nodes to the
-	 * specified file.
+	 * specified file, using the default Jackson ObjectMapper.
 	 *
 	 * @param nodeFile node json file
 	 */
@@ -258,8 +258,19 @@ public class OsmParser {
 	}
 	
 	/**
+	 * Write a JSON representation of the current osm nodes to the
+	 * specified file, using the specified Jackson ObjectMapper.
+	 *
+	 * @param nodeFile node json file
+	 * @param objectMapper custom object mapper
+	 */
+	public void writeNodes(File nodeFile, ObjectMapper objectMapper) throws JsonGenerationException, JsonMappingException, IOException {
+		objectMapper.writeValue(nodeFile, osm.getNodes());
+	}
+	
+	/**
 	 * Write a JSON representation of the current osm ways to the
-	 * specified file.
+	 * specified file, using the default Jackson ObjectMapper.
 	 *
 	 * @param wayFile way json file
 	 */
@@ -269,13 +280,35 @@ public class OsmParser {
 	}
 	
 	/**
+	 * Write a JSON representation of the current osm ways to the
+	 * specified file, using the specified Jackson ObjectMapper.
+	 *
+	 * @param wayFile way json file
+	 * @param objectMapper custom object mapper
+	 */
+	public void writeWays(File wayFile, ObjectMapper objectMapper) throws JsonGenerationException, JsonMappingException, IOException {
+		objectMapper.writeValue(wayFile, osm.getWays());
+	}
+	
+	/**
 	 * Write a JSON representation of the current osm relations to the
-	 * specified file.
+	 * specified file, using the default Jackson ObjectMapper.
 	 *
 	 * @param relationFile relation json file
 	 */
 	public void writeRelations(File relationFile) throws JsonGenerationException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(relationFile, osm.getRelations());
+	}
+	
+	/**
+	 * Write a JSON representation of the current osm relations to the
+	 * specified file, using the specified Jackson ObjectMapper.
+	 *
+	 * @param relationFile relation json file
+	 * @param objectMapper custom object mapper
+	 */
+	public void writeRelations(File relationFile, ObjectMapper objectMapper) throws JsonGenerationException, JsonMappingException, IOException {
+		objectMapper.writeValue(relationFile, osm.getRelations());
 	}
 }
