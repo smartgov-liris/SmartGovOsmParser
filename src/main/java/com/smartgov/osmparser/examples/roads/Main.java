@@ -10,32 +10,36 @@ import javax.xml.bind.JAXBException;
 
 import com.smartgov.osmparser.Osm;
 import com.smartgov.osmparser.OsmParser;
-import com.smartgov.osmparser.elements.Node;
-import com.smartgov.osmparser.elements.Relation;
 import com.smartgov.osmparser.filters.elements.TagFilter;
 import com.smartgov.osmparser.filters.tags.BaseTagMatcher;
 
+/**
+ * An example of how the API can be used to build an osm road graph.
+ *
+ */
 public class Main {
 
     public static void main(String[] args) throws JAXBException, IOException {
         OsmParser parser = new OsmParser();
+        // Parse the test osm file
         Osm osm = (Osm) parser.parse(new File(Main.class.getResource("../test.osm").getFile()));
         
 
+        // Filter only highways
         parser.setWayFilter(new TagFilter(new BaseTagMatcher("highway", ".*")));
-        parser.setWayTagMatcher(new BaseTagMatcher("highway", ".*").or("name", ".*"));
-
-//        parser.addWayTagMatcher(new IncludeTagMatcher("ref", ".*"));
-        parser.filterWays();
-        System.out.println(osm.getWays());
         
-        // osm.addNodeFilter((new RoadNodesFilter(osm.getWays())).or(new ShopFilter()));
-        parser.setNodeFilter(new RoadNodesFilter(osm.getWays()));
+        // Keep highway, name and ref tags
+        parser.setWayTagMatcher(new BaseTagMatcher("highway", ".*").or("name", ".*").or("ref", ".*"));
+
+        // Filter the ways and their tags
+        parser.filterWays();
+        
+        // Keep only nodes that belong to ways
+        parser.setNodeFilter(new WayNodesFilter(osm.getWays()));
+        
+        // Filter nodes
         parser.filterNodes();
         
-        
-//        System.out.println(osm.getNodes().size());
-//        System.out.println(osm.getNodes());
         
         parser.writeNodes(new File("src/main/resources/com/smartgov/osmparser/examples/roads/nodes.json"));
         parser.writeWays(new File("src/main/resources/com/smartgov/osmparser/examples/roads/ways.json"));
