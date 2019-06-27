@@ -31,7 +31,7 @@ public class Main {
         parser.setWayFilter(new TagFilter(new BaseTagMatcher("highway", ".*")));
         
         // Keep highway, name and ref tags
-        parser.setWayTagMatcher(new BaseTagMatcher("highway", ".*").or("name", ".*").or("ref", ".*"));
+        parser.setWayTagMatcher(new BaseTagMatcher("highway", ".*").or("name", ".*").or("ref", ".*").or("oneway", ".*"));
 
         // Filter the ways and their tags
         parser.filterWays();
