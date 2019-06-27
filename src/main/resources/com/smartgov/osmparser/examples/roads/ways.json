@@ -10,14 +10,16 @@
   "id" : "20225592",
   "tags" : {
     "name" : "Rue du Guichet",
-    "highway" : "residential"
+    "highway" : "residential",
+    "oneway" : "yes"
   },
   "nodeRefs" : [ "213922390", "213933202", "213932733" ]
 }, {
   "id" : "20225603",
   "tags" : {
     "name" : "Rue Notre-Dame",
-    "highway" : "residential"
+    "highway" : "residential",
+    "oneway" : "yes"
   },
   "nodeRefs" : [ "213917708", "213923085", "6377620323", "213931093" ]
 }, {
@@ -1225,7 +1227,8 @@
   "id" : "391464144",
   "tags" : {
     "name" : "Place La Fayette",
-    "highway" : "residential"
+    "highway" : "residential",
+    "oneway" : "yes"
   },
   "nodeRefs" : [ "213931093", "213935983" ]
 }, {
@@ -1424,7 +1427,8 @@
   "id" : "391464268",
   "tags" : {
     "name" : "Rue du Comice",
-    "highway" : "residential"
+    "highway" : "residential",
+    "oneway" : "-1"
   },
   "nodeRefs" : [ "213922180", "3946790933" ]
 }, {
@@ -1997,14 +2001,16 @@
   "id" : "547057151",
   "tags" : {
     "name" : "Rue du Guichet",
-    "highway" : "residential"
+    "highway" : "residential",
+    "oneway" : "yes"
   },
   "nodeRefs" : [ "213935200", "213922390" ]
 }, {
   "id" : "547057152",
   "tags" : {
     "name" : "Rue du Guichet",
-    "highway" : "residential"
+    "highway" : "residential",
+    "oneway" : "yes"
   },
   "nodeRefs" : [ "213914026", "5724133094", "213935200" ]
 }, {
