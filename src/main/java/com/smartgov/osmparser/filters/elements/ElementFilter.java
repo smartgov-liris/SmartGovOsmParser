@@ -11,6 +11,7 @@ public abstract class ElementFilter {
 	/**
 	 * Filter the given element.
 	 *
+	 * @param element osm element to filter
 	 * @return true if and only if the element should be kept
 	 */
 	public abstract boolean filter(OsmElement element);
