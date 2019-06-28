@@ -14,6 +14,7 @@ import com.smartgov.osmparser.Osm;
 import com.smartgov.osmparser.OsmParser;
 import com.smartgov.osmparser.filters.elements.TagFilter;
 import com.smartgov.osmparser.filters.tags.BaseTagMatcher;
+import com.smartgov.osmparser.filters.tags.NoneTagMatcher;
 
 /**
  * An example of how the API can be used to build an osm road graph.
@@ -38,6 +39,9 @@ public class Main {
         
         // Keep only nodes that belong to ways
         parser.setNodeFilter(new WayNodesFilter(osm.getWays()));
+        
+        // Does not keep any tag for nodes
+        parser.setNodeTagMatcher(new NoneTagMatcher());
         
         // Filter nodes
         parser.filterNodes();
