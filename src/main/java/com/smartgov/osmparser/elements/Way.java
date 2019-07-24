@@ -1,5 +1,6 @@
 package com.smartgov.osmparser.elements;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -15,7 +16,7 @@ public class Way extends OsmElement {
 	
 	@XmlJavaTypeAdapter(WayNdAdapter.class)
 	@XmlElement(name = "nd")
-	private List<String> nodeRefs;
+	private List<String> nodeRefs = new ArrayList<>();
 
 
 	/**

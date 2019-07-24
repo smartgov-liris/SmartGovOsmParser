@@ -1,6 +1,6 @@
 package com.smartgov.osmparser;
 
-import java.util.List;
+import java.util.TreeSet;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -23,13 +23,13 @@ import com.smartgov.osmparser.elements.Way;
 public class Osm {
 
 	@XmlElement(name = "node")
-	private List<Node> nodes;
+	private TreeSet<Node> nodes;
 
 	@XmlElement(name = "way")
-	private List<Way> ways;
+	private TreeSet<Way> ways;
 	
 	@XmlElement(name = "relation")
-	private List<Relation> relations;
+	private TreeSet<Relation> relations;
 	
 	
 	/**
@@ -37,7 +37,7 @@ public class Osm {
 	 *
 	 * @return  Osm nodes
 	 */
-	public List<Node> getNodes() {
+	public TreeSet<Node> getNodes() {
 		return nodes;
 	}
 
@@ -46,7 +46,7 @@ public class Osm {
 	 *
 	 * @return Osm ways
 	 */
-	public List<Way> getWays() {
+	public TreeSet<Way> getWays() {
 		return ways;
 	}
 
@@ -55,7 +55,7 @@ public class Osm {
 	 *
 	 * @return Osm relations. 
 	 */
-	public List<Relation> getRelations() {
+	public TreeSet<Relation> getRelations() {
 		return relations;
 	}
 	

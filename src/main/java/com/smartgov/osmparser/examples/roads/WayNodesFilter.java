@@ -1,6 +1,6 @@
 package com.smartgov.osmparser.examples.roads;
 
-import java.util.List;
+import java.util.TreeSet;
 
 import com.smartgov.osmparser.elements.OsmElement;
 import com.smartgov.osmparser.elements.Way;
@@ -16,7 +16,7 @@ import com.smartgov.osmparser.filters.elements.ElementFilter;
  */
 public class WayNodesFilter extends ElementFilter {
 
-	private List<Way> ways;
+	private TreeSet<String> wayNodes;
 	
 	/**
 	 * Build a new element filter that will keep elements that belong to at
@@ -24,22 +24,21 @@ public class WayNodesFilter extends ElementFilter {
 	 * 
 	 * @param list list of ways to check
 	 */
-	public WayNodesFilter(List<Way> list) {
-		this.ways = list;
-	}
-
-	@Override
-	public boolean filter(OsmElement node) {
-		boolean inWay = false;
-		int i = 0;
-		while (i < this.ways.size() && !inWay) {
-			if (this.ways.get(i).getNodeRefs().contains(node.getId())) {
-				inWay = true;
+	public WayNodesFilter(TreeSet<Way> ways) {
+		wayNodes = new TreeSet<>();
+		for(Way way : ways) {
+			for(String nodeId : way.getNodeRefs()) {
+				wayNodes.add(nodeId);
 			}
-			i++;
 		}
-		
-		return inWay;
+	}
+	
+	@Override
+	public boolean filter(OsmElement element) {
+		if(!wayNodes.contains(element.getId()))
+			return false;
+		wayNodes.remove(element.getId());
+		return true;
 	}
 
 }

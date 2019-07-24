@@ -17,7 +17,7 @@ import com.smartgov.osmparser.serializers.TagSerializer;
  * are common features of any osm element.
  * </p>
  */
-public class OsmElement {
+public class OsmElement implements Comparable<OsmElement> {
 	
 	@XmlAttribute
 	private String id;
@@ -51,6 +51,11 @@ public class OsmElement {
 	@Override
 	public String toString() {
 		return "OsmElement [id=" + id + ", tags=" + tags + "]\n";
+	}
+
+	@Override
+	public int compareTo(OsmElement o) {
+		return id.compareTo(o.getId());
 	}
 
 }

@@ -176,7 +176,9 @@ public class OsmParser {
 					}
 				}
 			}
+			System.out.println("hey " + nodesToRemove.size());
 			osm.getNodes().removeAll(nodesToRemove);
+			System.out.println("ok");
 		}
 	}
 
