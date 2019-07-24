@@ -176,9 +176,9 @@ public class OsmParser {
 					}
 				}
 			}
-			System.out.println("hey " + nodesToRemove.size());
+			System.out.print(nodesToRemove.size() + " nodes to remove from osm instance.");
 			osm.getNodes().removeAll(nodesToRemove);
-			System.out.println("ok");
+			System.out.println(" Done");
 		}
 	}
 
@@ -211,7 +211,9 @@ public class OsmParser {
 					}
 				}
 			}
+			System.out.print(waysToRemove.size() + " ways to remove from osm instance.");
 			osm.getWays().removeAll(waysToRemove);
+			System.out.println(" Done");
 		}
 	}
 
@@ -244,7 +246,9 @@ public class OsmParser {
 					}
 				}
 			}
+			System.out.print(relationsToRemove.size() + " relations to remove from osm instance.");
 			osm.getRelations().removeAll(relationsToRemove);
+			System.out.println(" Done");
 		}
 	}
 	
